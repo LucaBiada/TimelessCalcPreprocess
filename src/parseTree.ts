@@ -67,9 +67,17 @@ function cleanNodes(data: Record<string, any>) {
             grantedIntelligence,
             ...rest
         } = node;
+        if (Array.isArray(rest.stats)) rest.stats = rest.stats.map(stripKeywordLinks);
         cleanedNodes[id] = rest;
     }
     data.nodes = cleanedNodes;
+}
+
+/**
+ * Since 3.30 GGG marks keywords as "[Blind]" or "[Blind|Blinded]" (link|shown text). Keeps only the shown text.
+ */
+export function stripKeywordLinks(text: string): string {
+    return text.replace(/\[(?:[^\]|]*\|)?([^\]]*)\]/g, '$1');
 }
 
 /**

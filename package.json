@@ -4,9 +4,11 @@
   "description": "Scripts de preprocessing pour transformer les données du Passive Skill Tree de Path of Exile.",
   "main": "src/parseTree.ts",
   "scripts": {
+    "export-dat": "node tools/export-dat.mjs",
     "parse-tree": "ts-node src/parseTree.ts",
     "generate-mods": "ts-node src/generateMods.ts",
-    "jewels": "ts-node src/generateSeeds.ts"
+    "jewels": "ts-node src/generateSeeds.ts",
+    "sync-app": "node tools/sync-to-app.mjs"
   },
   "dependencies": {
     "fflate": "^0.8.2",
@@ -14,6 +16,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.10.5",
+    "pathofexile-dat": "^16.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   }

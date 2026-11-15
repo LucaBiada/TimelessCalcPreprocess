@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { stripKeywordLinks } from './parseTree';
 
 const version = process.argv[2] || 'default';
 const replaceSkillsPath = path.resolve(__dirname, `../data/${version}/alternatepassiveskills.json`);
@@ -30,18 +31,18 @@ function getSkillList(): number[] {
     });;
 }
 
-function parseStats(skillList: number[]): Map<string, number>
+// Description id -> stat rids. Several rids can share one description (base_strength uses additional_strength's text).
+function parseStats(skillList: number[]): Map<string, number[]>
 {
     const statsData = readJSON(statsPath);
-    const map = new Map<string, number>()
+    const map = new Map<string, number[]>()
 
     statsData.forEach(stat => {
         if (skillList.includes(stat._rid)) {
-            if (['base_dexterity', 'base_intelligence', 'base_strength'].includes(stat.Id)) {
-                map.set(stat.Id.replace('base_', 'additional_'), stat._rid)
-            } else {
-                map.set(stat.Id, stat._rid);
-            }
+            const descriptionId = ['base_dexterity', 'base_intelligence', 'base_strength'].includes(stat.Id)
+                ? stat.Id.replace('base_', 'additional_')
+                : stat.Id;
+            map.set(descriptionId, [...(map.get(descriptionId) ?? []), stat._rid]);
         }
     })
 
@@ -54,7 +55,7 @@ function readJSON(filepath: string): Record<string, any>[]
     return JSON.parse(inputData)
 }
 
-function parseDescriptions(statsCodes: Map<string, number>)
+function parseDescriptions(statsCodes: Map<string, number[]>)
 {
     const inputData = fs.readFileSync(descriptionPath, 'utf-16le');
     const descriptions = inputData.split("\n")
@@ -105,11 +106,11 @@ function parseDescriptions(statsCodes: Map<string, number>)
             } else if (t.includes('per_minute_to_per_second')) {
                 divider = 60;
             }
-            statDescription.push({from: from, to: to, divider: divider, translation: translation.replace('{0:+d}', '{0}')})
+            statDescription.push({from: from, to: to, divider: divider, translation: stripKeywordLinks(translation.replace('{0:+d}', to === -1 ? '{0}' : '+{0}'))})
         })
-        finalDescriptions[statsCodes.get(skillId)] = statDescription;
+        statsCodes.get(skillId).forEach(rid => { finalDescriptions[rid] = statDescription; });
     });
-    finalDescriptions[statsCodes.get('base_devotion')] = [{translation: "+{0} to Devotion"}]
+    statsCodes.get('base_devotion')?.forEach(rid => { finalDescriptions[rid] = [{translation: "+{0} to Devotion"}]; });
     writeOutputFiles(finalDescriptions, 'translation.json')
 }
 

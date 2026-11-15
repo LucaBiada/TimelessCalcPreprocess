@@ -675,6 +675,12 @@
       "translation": "{0}% reduced Spell Critical Strike Chance"
     }
   ],
+  "575": [
+    {
+      "divider": 1,
+      "translation": "{0} to Strength"
+    }
+  ],
   "576": [
     {
       "divider": 1,
@@ -685,6 +691,12 @@
     {
       "divider": 1,
       "translation": "{0} to Intelligence"
+    }
+  ],
+  "581": [
+    {
+      "divider": 1,
+      "translation": "{0} to Dexterity"
     }
   ],
   "582": [

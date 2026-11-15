@@ -23,9 +23,16 @@ Download the release for your game version and extract:
 - `data.json` - Complete passive skill tree data
 - `assets/` - Folder containing images and sprites (optional)
 
-#### From [poe-dat-viewer](https://snosme.github.io/poe-dat-viewer/)
+#### Game tables: `npm run export-dat <version> <patch>`
 
-Export the following from the `data/` folder (convert `.datc64` files to JSON):
+Downloads the tables below straight from GGG's patch server into `data/<version>/`
+(get the current patch from [latest.txt](https://raw.githubusercontent.com/poe-tool-dev/latest-patch-version/main/latest.txt)):
+
+```bash
+npm run export-dat 3.30 3.30.0.2
+```
+
+Or export them by hand from [poe-dat-viewer](https://snosme.github.io/poe-dat-viewer/), from the `data/` folder (convert `.datc64` files to JSON):
 
 - `alternatepassiveadditions.json` - Alternate passive skill additions
 - `alternatepassiveskills.json` - Alternate passive skills replacements
@@ -43,7 +50,10 @@ All scripts accept a version argument (e.g., `3.27`). If not provided, defaults 
 npm run parse-tree <version>
 npm run generate-mods <version>
 npm run jewels <version>
+npm run sync-app <version> [appDir=../TimelessCalc] [gggExportDir]
 ```
+
+`sync-app` copies the output into the TimelessCalc app (data, analyzer config, jewel files, and the tree images when `gggExportDir` points at an unpacked skilltree-export release).
 
 ### Command Descriptions
 

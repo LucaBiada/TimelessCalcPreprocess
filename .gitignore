@@ -17,3 +17,5 @@ npm-debug.log*
 
 # Build output
 dist/
+# Game bundle cache for tools/export-dat.mjs
+.dat-cache/
